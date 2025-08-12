@@ -1,0 +1,21 @@
+app_name: "live-user"
+server:
+  host: "0.0.0.0"
+  port: 8080
+  timeout: 30  # 超时时间（秒）
+
+databases:
+  mysql:
+    username: "root"
+    password: "96531Tqinghua"
+    address: 43.145.64.184:22809
+    dbname: "live_chat"
+    options:
+      timeout: 5000
+      readtimeout: 500
+      writetimeout: 500
+      max_open_conns: 100
+      max_idle_conns: 20
+  redis:
+    address: "111.229.65.127:6379"
+    password: "@Zry960531"
