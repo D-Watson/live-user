@@ -13,7 +13,7 @@ func GenerateToken(userID, username string, secretKey []byte, expiresIn time.Dur
 	claims := Claims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "my-app",                                      // 签发者
+			Issuer:    "live-user",                                   // 签发者
 			Subject:   "user-auth",                                   // 主题
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiresIn)), // 过期时间
 			IssuedAt:  jwt.NewNumericDate(time.Now()),                // 签发时间
@@ -56,7 +56,10 @@ func ParseToken(tokenStr string) (*Claims, error) {
 	return nil, err
 }
 
+//多设备管理
+
 type Claims struct {
-	UserID string `json:"userId"`
+	UserID   string `json:"userId"`
+	DeviceID string `json:"deviceId"`
 	jwt.RegisteredClaims
 }
