@@ -38,8 +38,7 @@ func QueryUser(ctx context.Context, id int64, email, phone string) (*entity.User
 	}
 	err := tx.Find(en).Error
 	if err != nil {
-
 		return &entity.Users{}, nil
 	}
-	return &entity.Users{}, nil
+	return en, nil
 }
