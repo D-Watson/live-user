@@ -13,21 +13,21 @@ import (
 	"live-user/rpc"
 )
 
-func LoginService(ctx context.Context, req *entity.LoginReq) (resp *consts2.BaseResp) {
+func Login(ctx context.Context, req *entity.LoginReq) (resp *consts2.BaseResp) {
 	resp = &consts2.BaseResp{
 		ErrCode: consts2.HTTP_OK,
 	}
-	//验证密码
-	passwd, err := rpc.DecryptData(ctx, req.PasswordEncrypted, consts.DECRYPT_ROLE)
-	if err != nil {
-		resp.ErrCode = consts.NETWORK_RPC_ERROR
+	if !req.PasswdVerify && !verifyCode(ctx, req.Email, req.Code) {
+		resp.ErrCode = consts.INVALID_CODE
 		return
 	}
-	passwd, _ = EncryptPasswd(passwd)
 	en := &entity.Users{
-		Username:     req.UserName,
-		Email:        req.Email,
-		PasswordHash: passwd,
+		Username: req.UserName,
+		Email:    req.Email,
+	}
+	if req.PasswdVerify {
+		passwd := getPasswd(ctx, req.PasswordEncrypted)
+		en.PasswordHash = passwd
 	}
 	user, err := mysql.QueryUser(ctx, en)
 	if err != nil {
@@ -56,6 +56,28 @@ func LoginService(ctx context.Context, req *entity.LoginReq) (resp *consts2.Base
 		return
 	}
 	return
+}
+
+func getPasswd(ctx context.Context, passwd string) string {
+	//验证密码
+	passwd, err := rpc.DecryptData(ctx, passwd, consts.DECRYPT_ROLE)
+	if err != nil {
+		return ""
+	}
+	passwd, _ = EncryptPasswd(passwd)
+	return passwd
+}
+
+func verifyCode(ctx context.Context, email, code string) bool {
+	//1. 校验邮箱验证码
+	verifiedCode, err := redis.QueryEmailToken(ctx, email)
+	if err != nil {
+		return false
+	}
+	if code != verifiedCode {
+		return false
+	}
+	return true
 }
 
 //退出登录

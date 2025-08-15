@@ -41,4 +41,5 @@ const (
 	DBS_ERROR            = 5001
 	DEVICE_OVERLIMIT     = 5002
 	EMAIL_SEND_ERROR     = 5003
+	INVALID_CODE         = 5005
 )

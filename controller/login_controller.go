@@ -22,7 +22,7 @@ func Login(c *gin.Context) {
 		c.AsciiJSON(http.StatusBadRequest, resp)
 		return
 	}
-	resp = service.LoginService(ctx, req)
+	resp = service.Login(ctx, req)
 	c.AsciiJSON(http.StatusOK, resp)
 }
 
@@ -59,9 +59,4 @@ func SendEmailCode(c *gin.Context) {
 	}
 	c.AsciiJSON(http.StatusOK, resp)
 	return
-}
-
-// VerifyEmailCode 核对验证码
-func VerifyEmailCode(c *gin.Context) {
-
 }

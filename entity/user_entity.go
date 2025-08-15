@@ -10,6 +10,8 @@ type LoginReq struct {
 	Email             string `json:"email"`
 	DevieceId         string `json:"deviceId"`
 	PasswordEncrypted string `json:"passwordEncrypted"`
+	PasswdVerify      bool   `json:"passwdVerify"`
+	Code              string `json:"code"`
 }
 type LoginResp struct {
 	UserId        string    `json:"userId"`
