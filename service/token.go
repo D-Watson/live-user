@@ -1,26 +1,30 @@
-package utils
+package service
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"live-user/consts"
 )
 
-func GenerateToken(userID, username string, secretKey []byte, expiresIn time.Duration) (string, error) {
+func GenerateToken(userID, deviceId string, secretKey []byte, expiresIn time.Duration) (string, error) {
 	// 设置Claims
+	now := time.Now()
+	ext := time.Now().Add(expiresIn)
 	claims := Claims{
-		UserID: userID,
+		UserID:   userID,
+		DeviceID: deviceId,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "live-user",                                   // 签发者
-			Subject:   "user-auth",                                   // 主题
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiresIn)), // 过期时间
-			IssuedAt:  jwt.NewNumericDate(time.Now()),                // 签发时间
-			ID:        uuid.NewString(),                              // JWT ID
+			Issuer:    "live-user",             // 签发者
+			Subject:   "user-auth",             // 主题
+			ExpiresAt: jwt.NewNumericDate(ext), // 过期时间
+			IssuedAt:  jwt.NewNumericDate(now), // 签发时间
+			ID:        uuid.NewString(),        // JWT ID
 		},
 	}
-
 	// 创建Token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -47,7 +51,7 @@ func CheckPassword(password, hashedPassword string) bool {
 // ParseToken 解析JWT令牌
 func ParseToken(tokenStr string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("your-secret-key"), nil
+		return []byte(os.Getenv(consts.JWT_SECRET)), nil
 	})
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {

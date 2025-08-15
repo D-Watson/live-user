@@ -1,7 +1,10 @@
-app_name: "live-user"
 server:
-  host: "0.0.0.0"
-  port: 8080
+  name: live-safety
+  rpc:
+    host: 0.0.0.0:50052
+    server-host: 0.0.0.0:50051
+  http:
+    host: 0.0.0.0:50011
   timeout: 30  # 超时时间（秒）
 
 databases:
@@ -19,3 +22,4 @@ databases:
   redis:
     address: "111.229.65.127:6379"
     password: "@Zry960531"
+

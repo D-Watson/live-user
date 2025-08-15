@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"live-user/utils"
+	"live-user/service"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -41,14 +41,15 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		// 3. 验证JWT
 		tokenStr := tokenParts[1]
-		claims, err := utils.ParseToken(tokenStr)
+		claims, err := service.ParseToken(tokenStr)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "无效令牌"})
 			return
 		}
 
 		// 4. 将用户信息存入上下文
-		c.Set("userID", claims.UserID)
+		c.Set("userId", claims.UserID)
+		c.Set("deviceId", claims.DeviceID)
 		c.Next()
 	}
 }

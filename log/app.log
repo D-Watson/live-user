@@ -27,3 +27,4 @@
 2025-08-12T12:57:48.152|fatal|mysql/initialize_mysql.go:26|msg=[DB] init failed, err=dial tcp: lookup sh-cynosdbmysql-grp-javxeewu.sql.tencentcdb.com: i/o timeout
 2025-08-12T12:57:51.136|fatal|mysql/initialize_mysql.go:26|msg=[DB] init failed, err=dial tcp: lookup sh-cynosdbmysql-grp-javxeewu.sql.tencentcdb.com: i/o timeout
 2025-08-12T12:59:48.073|fatal|mysql/initialize_mysql.go:26|msg=[DB] init failed, err=dial tcp: lookup sh-cynosdbmysql-grp-javxeewu.sql.tencentcdb.com: i/o timeout
+2025-08-14T19:42:38.887|error|conf/config.go:58|msg=[configs] read file error%!(EXTRA *fs.PathError=open ./conf/config.yaml: no such file or directory)

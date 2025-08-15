@@ -1,0 +1,38 @@
+syntax = "proto3";
+package transfer_safe;
+option go_package = "live_safty/proto";
+
+
+// 安全传输服务
+service TransferSafe {
+  // 执行安全传输
+  rpc SecureTransferPublicKey (GetPublicTokenRequest) returns (GetPublicTokenReply) {}
+  rpc SecureTransferPrivateKey (GetPrivateTokenRequest) returns (GetPrivateTokenReply) {}
+  rpc SecureEncrypt(Data) returns(Data){}
+  rpc SecureDecrypt(Data) returns(Data){}
+}
+
+message Data{
+  int32 role = 1;
+  string transData = 2;
+  string encryptData = 3;
+  string decryptData = 4;
+}
+
+message GetPublicTokenRequest{
+  int32 role = 1; //"FRONT"前端, "BACKEND"服务端
+}
+message GetPrivateTokenRequest{
+  int32 role = 1; //"FRONT"前端, "BACKEND"服务端
+}
+
+// The response message containing the greetings
+message GetPublicTokenReply {
+  string token = 1; //公钥
+  int32 errCode = 2; //
+}
+
+message GetPrivateTokenReply{
+  string token = 1; //密钥
+  int32 errCode = 2;
+}

@@ -1,13 +1,49 @@
 package entity
 
 import (
+	"strconv"
 	"time"
 )
 
 type LoginReq struct {
+	UserName          string `json:"userName"`
+	Email             string `json:"email"`
+	DevieceId         string `json:"deviceId"`
+	PasswordEncrypted string `json:"passwordEncrypted"`
+}
+type LoginResp struct {
+	UserId        string    `json:"userId"`
+	Token         string    `json:"token"`
+	UserName      string    `json:"userName"`
+	Email         string    `json:"email"`
+	Avater        string    `json:"avater"`
+	LastLoginTime time.Time `json:"lastLoginTime"`
+}
+
+func (us *Users) BuildToLoginResp() *LoginResp {
+	userId := strconv.FormatInt(us.Id, 10)
+	return &LoginResp{
+		UserId:        userId,
+		Email:         us.Email,
+		Avater:        us.Avatar,
+		LastLoginTime: us.LastLoginTime,
+	}
 }
 
 type RegisterReq struct {
+	Email string `json:"email"`
+}
+
+type SendCodeReq struct {
+	Email string `json:"email"`
+}
+type SendCodeResp struct {
+	SendSucc bool `json:"sendSucc"`
+}
+
+type VerifyCodeReq struct {
+	Email string `json:"email"`
+	Code  string `json:"code"`
 }
 
 // Users 用户基本信息表

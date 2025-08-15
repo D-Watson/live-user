@@ -3,12 +3,13 @@ package mysql
 import (
 	"context"
 
+	"github.com/D-Watson/live-safety/log"
+	"live-user/dbs"
 	"live-user/entity"
-	"live-user/utils/log"
 )
 
 func InsertUser(ctx context.Context, en entity.Users) error {
-	res := UserEngineDB.WithContext(ctx).Create(en)
+	res := dbs.MysqlEngine.WithContext(ctx).Create(en)
 	if err := res.Error; err != nil {
 		log.Errorf(ctx, "[DB] create error=%v", err)
 		return err
@@ -24,19 +25,21 @@ func DeleteUser(ctx context.Context) error {
 	return nil
 }
 
-func QueryUser(ctx context.Context, id int64, email, phone string) (*entity.Users, error) {
-	tx := UserEngineDB.WithContext(ctx)
-	en := &entity.Users{}
-	if id >= 0 {
-		tx = tx.Where("id = ?", id)
+func QueryUser(ctx context.Context, en *entity.Users) (*entity.Users, error) {
+	tx := dbs.MysqlEngine.WithContext(ctx)
+	if en.Id >= 0 {
+		tx = tx.Where("id = ?", en.Id)
 	}
-	if email != "" {
-		tx = tx.Where("email = ?", email)
+	if en.Email != "" {
+		tx = tx.Where("email = ?", en.Email)
 	}
-	if phone != "" {
-		tx = tx.Where("phone = ?", phone)
+	if en.Phone != "" {
+		tx = tx.Where("phone = ?", en.Phone)
 	}
-	err := tx.Find(en).Error
+	if en.PasswordHash != "" {
+		tx = tx.Where("password_hash = ?", en.PasswordHash)
+	}
+	err := tx.Find(&en).Error
 	if err != nil {
 		return &entity.Users{}, nil
 	}
