@@ -10,7 +10,6 @@ import (
 	"live-user/dbs/mysql"
 	"live-user/dbs/redis"
 	"live-user/entity"
-	"live-user/rpc"
 )
 
 func Login(ctx context.Context, req *entity.LoginReq) (resp *consts2.BaseResp) {
@@ -60,10 +59,10 @@ func Login(ctx context.Context, req *entity.LoginReq) (resp *consts2.BaseResp) {
 
 func getPasswd(ctx context.Context, passwd string) string {
 	//验证密码
-	passwd, err := rpc.DecryptData(ctx, passwd, consts.DECRYPT_ROLE)
-	if err != nil {
-		return ""
-	}
+	//passwd, err := rpc.DecryptData(ctx, passwd, consts.DECRYPT_ROLE)
+	//if err != nil {
+	//	return ""
+	//}
 	passwd, _ = EncryptPasswd(passwd)
 	return passwd
 }

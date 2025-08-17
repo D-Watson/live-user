@@ -26,9 +26,10 @@ func SendEmail(ctx context.Context, req *entity.SendCodeReq) (res *entity.SendCo
 		}
 	}(lock, ctx)
 	if ok, _ := lock.Acquire(ctx); !ok {
+		log.Errorf(ctx, "[redislock] acquire error")
 		return
 	}
-	err := sendEmail(req.Email)
+	err := sendEmail(ctx, req.Email)
 	if err != nil {
 		log.Errorf(ctx, "[Email] send err=", err)
 		return
@@ -42,8 +43,12 @@ func generateCode() string {
 	return fmt.Sprintf("%06d", rand.Intn(1000000))
 }
 
-func sendEmail(to string) error {
+func sendEmail(ctx context.Context, to string) error {
 	code := generateCode()
+	err := redis.InsertEmailToken(ctx, to, code)
+	if err != nil {
+		return err
+	}
 	// 创建邮件对象
 	m := gomail.NewMessage()
 	m.SetHeader("From", "3833340167@qq.com")

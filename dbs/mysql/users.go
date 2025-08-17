@@ -41,6 +41,7 @@ func QueryUser(ctx context.Context, en *entity.Users) (*entity.Users, error) {
 	}
 	err := tx.Find(&en).Error
 	if err != nil {
+		log.Errorf(ctx, "[mysql] error,err=", err)
 		return &entity.Users{}, nil
 	}
 	return en, nil

@@ -12,7 +12,7 @@ import (
 func InsertUserDeviceToken(ctx context.Context, userId, deviceId, token string) error {
 	key := consts.BuildTokenKey(userId, deviceId)
 	deviceKey := consts.BuildDeviceKey(userId)
-	err := dbs.RedisEngine.LPush(ctx, deviceKey, deviceId, consts.JWT_DURATION).Err()
+	err := dbs.RedisEngine.SAdd(ctx, deviceKey, deviceId).Err()
 	if err != nil {
 		log.Errorf(ctx, "[Redis] set error, err=", err)
 		return err
@@ -28,7 +28,7 @@ func InsertUserDeviceToken(ctx context.Context, userId, deviceId, token string) 
 // LenUserLoginDevice 判断是否超出登录设备数量限制
 func LenUserLoginDevice(ctx context.Context, userId string) (int, error) {
 	key := consts.BuildDeviceKey(userId)
-	nums, err := dbs.RedisEngine.LLen(ctx, key).Result()
+	nums, err := dbs.RedisEngine.SCard(ctx, key).Result()
 	if err != nil {
 		log.Errorf(ctx, "[Redis] len error, err=", err)
 		return int(nums), err

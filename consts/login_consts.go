@@ -7,7 +7,7 @@ import (
 
 const (
 	USER_TOKEN    = "userid:%s:deviceId:%s"
-	DEVICE_KEY    = "userid:%s"
+	DEVICE_KEY    = "userid:limit:device:%s"
 	EMAIL_KEY     = "email:%s"
 	JWT_SECRET    = "JWT_SECRET"
 	SMTP_PASSWORD = "SMTP_PASSWORD"
@@ -22,6 +22,7 @@ const (
 func BuildTokenKey(userId, deviceId string) string {
 	return fmt.Sprintf(USER_TOKEN, userId, deviceId)
 }
+
 func BuildDeviceKey(userId string) string {
 	return fmt.Sprintf(DEVICE_KEY, userId)
 }
